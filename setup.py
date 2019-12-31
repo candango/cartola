@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2019-2020 Flavio Garcia
+# Copyright 2015-2020 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,15 +39,15 @@ setup(
     name="cartola",
     version=cartola.get_version(),
     license=cartola.__licence__,
-    description=("Candango's Shared Util Functions."),
+    description="Candango's Shared Util Functions.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/candango/automatoes",
+    url="https://github.com/candango/cartola",
     author=cartola.get_author(),
     author_email=cartola.get_author_email(),
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
-        "License :: OSI Approved :: Apache Software License",
+        "Development Status :: 5 - Production/Stable",
+       #
         "Environment :: Console",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
@@ -55,7 +55,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3 :: Only",
+        "Topic :: Software Development :: Libraries"
     ],
     packages=["cartola"],
-    install_requires=resolve_requires("requirements/basic.txt")
 )
