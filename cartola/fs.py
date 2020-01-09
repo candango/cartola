@@ -61,15 +61,16 @@ def write(path, data, binary=False):
         mode = "wb"
     with open(path, mode) as f:
         f.write(data)
-    f.close()
 
 
-def read(path):
+def read(path, binary=False):
     """ Reads a file located at the given path. """
     data = None
-    with open(path, 'r') as f:
+    mode = "w"
+    if binary:
+        mode = "wb"
+    with open(path, mode) as f:
         data = f.read()
-    f.close()
     return data
 
 
@@ -77,4 +78,3 @@ def touch(path):
     """ Creates a file located at the given path. """
     with open(path, 'a') as f:
         os.utime(path, None)
-    f.close()
