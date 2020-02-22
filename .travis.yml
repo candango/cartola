@@ -1,0 +1,9 @@
+# https://travis-ci.org/candango/firenado
+language: python
+python:
+  - "3.5"
+  - "3.6"
+  - "3.7"
+  - "3.8"
+script:
+  - "PYTHONPATH=$PYTHONPATH:. python tests/runtests.py"
