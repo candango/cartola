@@ -55,7 +55,14 @@ def get_file_extension(filename):
 
 
 def write(path, data, binary=False):
-    """ Writes a given data to a file located at the given path. """
+    """ Write data to a file located in a given path. If binary is true will
+    open the file with the binary flag and data should be bytes instead of
+    string.
+    :param str path: Path where the file is located
+    :param str|bytes data: Data to be writen in the file. If binary is true
+    data must be in bytes instead of string.
+    :param bool binary: If true will read the file with the binary flag
+    """
     mode = "w"
     if binary:
         mode = "wb"
@@ -64,12 +71,21 @@ def write(path, data, binary=False):
 
 
 def read(path, binary=False):
-    """ Reads a file located at the given path. """
+    """
+    Read a file located at the given path. If binary is true will return bytes
+    instead of string.
+
+    :param str path: Path where the file is located
+    :param bool binary: If true will read the file with the binary flag
+    :return str|bytes: File content string or bytes. """
     data = None
-    mode = "w"
+    mode = "r"
     if binary:
-        mode = "wb"
-    with open(path, mode) as f:
+        mode = "rb"
+    abs_path = path
+    if not os.path.isabs(abs_path):
+        abs_path = os.path.join(os.getcwd(), abs_path)
+    with open(abs_path, mode) as f:
         data = f.read()
     return data
 
@@ -78,3 +94,29 @@ def touch(path):
     """ Creates a file located at the given path. """
     with open(path, 'a') as f:
         os.utime(path, None)
+
+
+def remove_existing(file_path):
+    """ Remove a file in a path if it exists and returns true. If file doesn't
+    exists returns false.
+
+    :param file_path: The file path
+    :return bool: True if file exits
+    """
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        return True
+    return False
+
+
+def rmdir_existing(dir_path):
+    """ Remove a directory in a path if it exists and returns true. If
+    directory doesn't exists returns false.
+
+    :param dir_path: The directory path
+    :return bool: True if directory exits
+    """
+    if os.path.exists(dir_path):
+        os.rmdir(dir_path)
+        return True
+    return False

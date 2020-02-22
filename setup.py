@@ -15,14 +15,18 @@
 # limitations under the License.
 
 import cartola
-from setuptools import setup
 from codecs import open
+from setuptools import setup
+import sys
+
 try:
     # for pip >= 10
     from pip._internal.req import parse_requirements
 except ImportError:
     # for pip <= 9.0.3
-    from pip.req import parse_requirements
+    print("error: Upgrade to a pip version newer than 10. Run \"pip install "
+          "--upgrade pip\".")
+    sys.exit(1)
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -31,7 +35,7 @@ with open("README.md", "r") as fh:
 # Solution from http://bit.ly/29Yl8VN
 def resolve_requires(requirements_file):
     requirements = parse_requirements("./%s" % requirements_file,
-            session=False)
+                                      session=False)
     return [str(ir.req) for ir in requirements]
 
 
