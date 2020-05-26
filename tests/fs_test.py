@@ -26,6 +26,7 @@ from cartola import fs
 import os
 import unittest
 
+
 class FsExtensionTestCase(unittest.TestCase):
 
     def test_extension_file_with_extension(self):
