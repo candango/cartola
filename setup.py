@@ -38,7 +38,6 @@ def resolve_requires(requirements_file):
                                       session=False)
     return [str(ir.req) for ir in requirements]
 
-
 setup(
     name="cartola",
     version=cartola.get_version(),
@@ -49,6 +48,7 @@ setup(
     url="https://github.com/candango/cartola",
     author=cartola.get_author(),
     author_email=cartola.get_author_email(),
+    install_requires=resolve_requires("requirements.txt"),
     classifiers=[
         "Development Status :: 5 - Production/Stable",
        #

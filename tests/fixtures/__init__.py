@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015-2019 Flavio Garcia
+# Copyright 2015-2020 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,21 +14,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
-from tests import config_test, fs_test, ftext_test
+
+# Variables to test config functions
+my_string_value = "string"
+my_num_value = 1
+my_list_value = ["a", "list"]
+my_dict_value = {'a': "dict"}
 
 
-def suite():
-    testLoader = unittest.TestLoader()
-    alltests = unittest.TestSuite()
-    alltests.addTests(testLoader.loadTestsFromModule(config_test))
-    alltests.addTests(testLoader.loadTestsFromModule(fs_test))
-    alltests.addTests(testLoader.loadTestsFromModule(ftext_test))
-    return alltests
+# Function to test config functions
+def my_function():
+    return my_string_value
 
 
-if __name__ == "__main__":
-    runner = unittest.TextTestRunner(verbosity=3)
-    result = runner.run(suite())
-    if not result.wasSuccessful():
-        exit(2)
+# Class to test config functions
+class MyClass:
+
+    def __init__(self):
+        self._num_value = my_num_value
+
+    @property
+    def num_value(self):
+        return self._num_value
