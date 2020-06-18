@@ -15,22 +15,30 @@
 # limitations under the License.
 
 """
-Pagination tests
+Network functions tests
 """
 
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
-from cartola import pagination
+from cartola import net
 import unittest
 
 
-class PaginatorTestCase(unittest.TestCase):
+class NetworkTestCase(unittest.TestCase):
 
-    def test_paginator_one_page(self):
-        """ Test paginator with one page """
-        paginator = pagination.Paginator(9, 1)
-        self.assertEqual(1, paginator.page_count)
-        self.assertEqual(9, paginator.row_count)
-        self.assertEqual(1, paginator.current_first_row)
-        self.assertEqual(9, paginator.current_last_row)
+    def test_valid_host_ping(self):
+        """ Test if ping will return true for valid host """
+        self.assertTrue(net.ping("candango.org"))
+
+    def test_invalid_host_ping(self):
+        """ Test if ping will return true for valid host """
+        self.assertFalse(net.ping("candngo.org"))
+
+    def test_valid_host_up(self):
+        """ Test if host will be up for valid host and port """
+        self.assertTrue(net.is_host_up("candango.org", "80"))
+
+    def test_invalid_host_up(self):
+        """ Test if host will be up for invalid host and port conbination """
+        self.assertFalse(net.is_host_up("candango.org", "8080"))
