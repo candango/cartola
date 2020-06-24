@@ -36,7 +36,12 @@ with open("README.md", "r") as fh:
 def resolve_requires(requirements_file):
     requirements = parse_requirements("./%s" % requirements_file,
                                       session=False)
-    return [str(ir.req) for ir in requirements]
+    try:
+        return [str(ir.req) for ir in requirements]
+    except AttributeError:
+        # for pip >= 20.1.x
+        return [str(ir.requirement) for ir in requirements]
+
 
 setup(
     name="cartola",
