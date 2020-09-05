@@ -15,6 +15,8 @@
 # limitations under the License.
 
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 
 def create_module(module, target):
@@ -120,3 +122,42 @@ def rmdir_existing(dir_path):
         os.rmdir(dir_path)
         return True
     return False
+
+
+def only_dirs_from(path, absolute=True):
+    """ Return only the directories into the informed path. By default the
+    directory list will contain absolute paths.
+    If path isn't a file will return None and log a warning.
+
+    :param str path: The path to return files from
+    :param bool absolute: If we return the just directory name or absolute path
+    :return list or None: List of directories into the path
+    """
+    if os.path.isdir(path):
+        return [os.path.join(path, item) if absolute else item
+                for item in os.listdir(path)
+                if os.path.isdir(os.path.join(path, item))]
+    logger.warning("The informed path %s isn't a directory." % path)
+    return None
+
+
+def only_files_from(path, absolute=True, link=False):
+    """ Return only files found into the informed path. By default the
+    file list will contain absolute paths.
+    If path isn't a file will return None and log a warning.
+
+    :param str path: The path to return directories from
+    :param bool absolute: If we return the just file name or absolute path
+    :param bool link: If links should be returned also
+    :return list or None: List of files into the path
+    """
+    def is_file_fs(fs_path, fs_link=False):
+        if fs_link:
+            return os.path.isfile(fs_path) or os.path.islink(fs_path)
+        return os.path.isfile(fs_path)
+    if os.path.isdir(path):
+        return [os.path.join(path, item) if absolute else item
+                for item in os.listdir(path)
+                if is_file_fs(os.path.join(path, item), link)]
+    logger.warning("The informed path %s isn't a directory." % path)
+    return None

@@ -156,10 +156,30 @@ class FsBasicIOOperationsTestCase(unittest.TestCase):
         self.assertFalse(os.path.exists(file_target))
 
     def test_fs_rmdir_existing(self):
-        """ Remove a directory is it exists. """
+        """ Remove a directory is it exists."""
         dir_target = tests.get_sandbox_path("rmdir_existing_dir")
         self.assertFalse(fs.rmdir_existing(dir_target))
         os.mkdir(dir_target)
         self.assertTrue(os.path.exists(dir_target))
         self.assertTrue(fs.rmdir_existing(dir_target))
         self.assertFalse(os.path.exists(dir_target))
+
+    def test_fs_only_dirs_from(self):
+        """ Test only_dirs_from function from fs """
+        dir_target = tests.get_sandbox_path("parent_dir")
+        for child_dir in fs.only_dirs_from(dir_target, False):
+            self.assertTrue(os.path.isdir(os.path.join(dir_target, child_dir)))
+        for child_dir in fs.only_dirs_from(dir_target):
+            self.assertTrue(os.path.isdir(child_dir))
+        result = fs.only_dirs_from(
+            os.path.join(dir_target, "child_file_1.txt"))
+        self.assertTrue(result is None)
+
+    def test_fs_only_files_from(self):
+        """ Test only_files_from function from fs """
+        dir_target = tests.get_sandbox_path("parent_dir")
+        for child_file in fs.only_files_from(dir_target, False):
+            self.assertTrue(os.path.isfile(os.path.join(dir_target,
+                                                        child_file)))
+        for child_file in fs.only_files_from(dir_target):
+            self.assertTrue(os.path.isfile(child_file))

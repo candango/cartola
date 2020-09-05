@@ -18,6 +18,7 @@ def safe_remove(path):
     if os.path.exists(path):
         os.remove(path)
 
+
 def safe_rmdir(path):
     if os.path.exists(path):
         os.rmdir(path)
