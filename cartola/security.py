@@ -14,9 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+import crypt
+from hmac import compare_digest as compare_hash
+import logging
 import string
 import sys
+
+logger = logging.getLogger(__name__)
 
 
 # Used implementations described on: http://bit.ly/2gHlH9z
@@ -49,35 +53,76 @@ def random_string(length=5, upper_chars=True, punctuation=False):
 
 
 class KeyManager(object):
+    # following: https://crackstation.net/hashing-security.htm
 
-    SALT_SIZE = 24
+    METHOD_SHA512 = crypt.METHOD_SHA512
+    METHOD_SHA256 = crypt.METHOD_SHA256
+    METHOD_BLOWFISH = crypt.METHOD_BLOWFISH
+    METHOD_CRYPT = crypt.METHOD_CRYPT
+    METHOD_MD5 = crypt.METHOD_MD5
 
-    def generate(self, password):
-        # First is hash second is salt
-        # Salt is generated randomly
-        return None
+    @staticmethod
+    def get_manager(method):
+        """ Return a key manager by it's key method.
 
-    def create_hash(self, password, salt):
-        return None
+        :param method:
+        :return: A key manger by it's key method
+        :rtype: KeyManager
+        """
+        managers = {
+            KeyManager.METHOD_SHA512: Sha512KeyManager,
+            KeyManager.METHOD_SHA256: Sha256KeyManager,
+            # crypt.METHOD_BLOWFISH: NotImplemented,
+            # crypt.METHOD_CRYPT: NotImplemented,
+            # crypt.METHOD_MD5: NotImplemented,
+        }
+        manager = managers.get(method, NotImplemented)
+        return manager()
 
-    def validate_password(self, password, correct_hash):
-        return False
+    def generate(self, secret, **kwargs):
+        """ Generate a hash  hash using crypt the method will be chosen from
+        the salt implemented or provided.
+        If salt isn't provided a salt will be generated during the processing,
+        it is necessary to extract the salt from the returned hash in order to
+        validate it again.
+
+        :param str secret:
+        :param dict kwargs:
+        :key salt:
+        :key pepper:
+        :return:
+        :rtype: str
+        """
+        salt = kwargs.get("salt", self.salt(**kwargs))
+        pepper = kwargs.get("pepper")
+        if pepper:
+            secret = "%s%s" % (secret, pepper)
+        return crypt.crypt(secret, salt)
+
+    @staticmethod
+    def salt_from_hash(_hash):
+        return "$".join(_hash.split("$")[:-1])
+
+    def salt(self, **kwargs):
+        raise NotImplementedError
+
+    def validate(self, secret, _hash, **kwargs):
+        salt = kwargs.get("salt", self.salt_from_hash(_hash))
+        kwargs['salt'] = salt
+        return compare_hash(self.generate(secret, **kwargs), _hash)
 
 
 class Sha512KeyManager(KeyManager):
-    # following: https://crackstation.net/hashing-security.htm
 
-    def generate(self, password):
-        salt = os.urandom(self.SALT_SIZE).encode('hex')
-        return "%s:%s" % (self.create_hash(password, salt), salt)
+    def salt(self, **kwargs):
+        rounds = kwargs.get("rounds", 5000)
+        salt = crypt.mksalt(method=crypt.METHOD_SHA512, rounds=rounds)
+        return salt
 
-    def create_hash(self, password, salt):
-        import hashlib
-        salted_password = "%s%s" % (password, salt)
-        return hashlib.sha512(salted_password).hexdigest()
 
-    def validate_password(self, password, correct_hash):
-        correct_hashX = correct_hash.split(':')
-        canditate_hash = "%s:%s" % (
-            self.create_hash(password, correct_hashX[1]), correct_hashX[1])
-        return canditate_hash == correct_hash
+class Sha256KeyManager(KeyManager):
+
+    def salt(self, **kwargs):
+        rounds = kwargs.get("rounds", 5000)
+        salt = crypt.mksalt(method=crypt.METHOD_SHA256, rounds=rounds)
+        return salt
