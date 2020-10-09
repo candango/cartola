@@ -15,13 +15,14 @@
 # limitations under the License.
 
 import unittest
-from tests import config_test, fs_test, ftext_test
+from tests import config_test, dt_test, fs_test, ftext_test
 
 
 def suite():
     testLoader = unittest.TestLoader()
     alltests = unittest.TestSuite()
     alltests.addTests(testLoader.loadTestsFromModule(config_test))
+    alltests.addTests(testLoader.loadTestsFromModule(dt_test))
     alltests.addTests(testLoader.loadTestsFromModule(fs_test))
     alltests.addTests(testLoader.loadTestsFromModule(ftext_test))
     return alltests
