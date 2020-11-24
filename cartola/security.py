@@ -57,7 +57,8 @@ class KeyManager(object):
 
     METHOD_SHA512 = crypt.METHOD_SHA512
     METHOD_SHA256 = crypt.METHOD_SHA256
-    METHOD_BLOWFISH = crypt.METHOD_BLOWFISH
+    if (sys.version_info.major, sys.version_info.minor) > (3, 6):
+        METHOD_BLOWFISH = crypt.METHOD_BLOWFISH
     METHOD_CRYPT = crypt.METHOD_CRYPT
     METHOD_MD5 = crypt.METHOD_MD5
 
