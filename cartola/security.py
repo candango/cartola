@@ -117,7 +117,10 @@ class Sha512KeyManager(KeyManager):
 
     def salt(self, **kwargs):
         rounds = kwargs.get("rounds", 5000)
-        salt = crypt.mksalt(method=crypt.METHOD_SHA512, rounds=rounds)
+        if (sys.version_info.major, sys.version_info.minor) > (3, 6):
+            salt = crypt.mksalt(method=crypt.METHOD_SHA512, rounds=rounds)
+        else:
+            salt = crypt.mksalt(method=crypt.METHOD_SHA512)
         return salt
 
 
@@ -125,5 +128,8 @@ class Sha256KeyManager(KeyManager):
 
     def salt(self, **kwargs):
         rounds = kwargs.get("rounds", 5000)
-        salt = crypt.mksalt(method=crypt.METHOD_SHA256, rounds=rounds)
+        if (sys.version_info.major, sys.version_info.minor) > (3, 6):
+            salt = crypt.mksalt(method=crypt.METHOD_SHA256, rounds=rounds)
+        else:
+            salt = crypt.mksalt(method=crypt.METHOD_SHA256)
         return salt
