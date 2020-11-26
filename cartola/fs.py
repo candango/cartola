@@ -51,7 +51,7 @@ def get_file_extension(filename):
     """
     filename_x = filename.split('.')
     if len(filename_x) > 1:
-        if filename_x[-1].strip() is not '':
+        if filename_x[-1].strip() != "":
             return filename_x[-1]
     return None
 
