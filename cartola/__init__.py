@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 #
-# Copyright 2019-2020 Flavio Garcia
+# Copyright 2019-2021 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 # limitations under the License.
 
 __author__ = "Flavio Garcia <piraz@candango.org>"
-__version__ = (0, 10)
+__version__ = (0, 11)
 __licence__ = "Apache License V2.0"
 
 
