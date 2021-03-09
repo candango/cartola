@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 #
-# Copyright 2015-2020 Flavio Garcia
+# Copyright 2015-2021 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+import sys
 
 """
 The Explanation from the codes are described here: https://bit.ly/2D2ZFY9
@@ -77,6 +79,9 @@ EX_CONFIG = 78
 EX_MAX = 78
 
 
+def exit(error):
+    sys.exit(error)
+
+
 def exit_fatal(signal):
-    import sys
-    sys.exit(EX_FATAL_ERROR + signal)
+    sys.modules[__name__].exit(EX_FATAL_ERROR + signal)
