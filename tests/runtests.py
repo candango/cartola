@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015-2019 Flavio Garcia
+# Copyright 2015-2021 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
 # limitations under the License.
 
 import unittest
-from tests import config_test, dt_test, fs_test, ftext_test, security_test
+from tests import (config_test, dt_test, fs_test, ftext_test, security_test,
+                   sysexits_test)
 
 
 def suite():
@@ -26,6 +27,8 @@ def suite():
     alltests.addTests(testLoader.loadTestsFromModule(fs_test))
     alltests.addTests(testLoader.loadTestsFromModule(ftext_test))
     alltests.addTests(testLoader.loadTestsFromModule(security_test))
+    alltests.addTests(testLoader.loadTestsFromModule(security_test))
+    alltests.addTests(testLoader.loadTestsFromModule(sysexits_test))
     return alltests
 
 
