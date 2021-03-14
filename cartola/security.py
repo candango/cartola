@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 #
-# Copyright 2015-2020 Flavio Garcia
+# Copyright 2015-2021 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import crypt
+import os
+if os.name == 'posix':
+    import crypt
 from hmac import compare_digest as compare_hash
 import logging
 import string
@@ -52,84 +54,87 @@ def random_string(length=5, upper_chars=True, punctuation=False):
         return ''.join(secrets.choice(chars) for _ in range(length))
 
 
-class KeyManager(object):
-    # following: https://crackstation.net/hashing-security.htm
+# Key manager functionality is available only for posix.
+# TODO: Figure out how to get this working on nt(windows).
+if os.name == 'posix':
+    class KeyManager(object):
+        # following: https://crackstation.net/hashing-security.htm
 
-    METHOD_SHA512 = crypt.METHOD_SHA512
-    METHOD_SHA256 = crypt.METHOD_SHA256
-    if (sys.version_info.major, sys.version_info.minor) > (3, 6):
-        METHOD_BLOWFISH = crypt.METHOD_BLOWFISH
-    METHOD_CRYPT = crypt.METHOD_CRYPT
-    METHOD_MD5 = crypt.METHOD_MD5
-
-    @staticmethod
-    def get_manager(method):
-        """ Return a key manager by it's key method.
-
-        :param method:
-        :return: A key manger by it's key method
-        :rtype: KeyManager
-        """
-        managers = {
-            KeyManager.METHOD_SHA512: Sha512KeyManager,
-            KeyManager.METHOD_SHA256: Sha256KeyManager,
-            # crypt.METHOD_BLOWFISH: NotImplemented,
-            # crypt.METHOD_CRYPT: NotImplemented,
-            # crypt.METHOD_MD5: NotImplemented,
-        }
-        manager = managers.get(method, NotImplemented)
-        return manager()
-
-    def generate(self, secret, **kwargs):
-        """ Generate a hash  hash using crypt the method will be chosen from
-        the salt implemented or provided.
-        If salt isn't provided a salt will be generated during the processing,
-        it is necessary to extract the salt from the returned hash in order to
-        validate it again.
-
-        :param str secret:
-        :param dict kwargs:
-        :key salt:
-        :key pepper:
-        :return:
-        :rtype: str
-        """
-        salt = kwargs.get("salt", self.salt(**kwargs))
-        pepper = kwargs.get("pepper")
-        if pepper:
-            secret = "%s%s" % (secret, pepper)
-        return crypt.crypt(secret, salt)
-
-    @staticmethod
-    def salt_from_hash(_hash):
-        return "$".join(_hash.split("$")[:-1])
-
-    def salt(self, **kwargs):
-        raise NotImplementedError
-
-    def validate(self, secret, _hash, **kwargs):
-        salt = kwargs.get("salt", self.salt_from_hash(_hash))
-        kwargs['salt'] = salt
-        return compare_hash(self.generate(secret, **kwargs), _hash)
-
-
-class Sha512KeyManager(KeyManager):
-
-    def salt(self, **kwargs):
-        rounds = kwargs.get("rounds", 5000)
+        METHOD_SHA512 = crypt.METHOD_SHA512
+        METHOD_SHA256 = crypt.METHOD_SHA256
         if (sys.version_info.major, sys.version_info.minor) > (3, 6):
-            salt = crypt.mksalt(method=crypt.METHOD_SHA512, rounds=rounds)
-        else:
-            salt = crypt.mksalt(method=crypt.METHOD_SHA512)
-        return salt
+            METHOD_BLOWFISH = crypt.METHOD_BLOWFISH
+        METHOD_CRYPT = crypt.METHOD_CRYPT
+        METHOD_MD5 = crypt.METHOD_MD5
+
+        @staticmethod
+        def get_manager(method):
+            """ Return a key manager by it's key method.
+
+            :param method:
+            :return: A key manger by it's key method
+            :rtype: KeyManager
+            """
+            managers = {
+                KeyManager.METHOD_SHA512: Sha512KeyManager,
+                KeyManager.METHOD_SHA256: Sha256KeyManager,
+                # crypt.METHOD_BLOWFISH: NotImplemented,
+                # crypt.METHOD_CRYPT: NotImplemented,
+                # crypt.METHOD_MD5: NotImplemented,
+            }
+            manager = managers.get(method, NotImplemented)
+            return manager()
+
+        def generate(self, secret, **kwargs):
+            """ Generate a hash  hash using crypt the method will be chosen from
+            the salt implemented or provided.
+            If salt isn't provided a salt will be generated during the processing,
+            it is necessary to extract the salt from the returned hash in order to
+            validate it again.
+
+            :param str secret:
+            :param dict kwargs:
+            :key salt:
+            :key pepper:
+            :return:
+            :rtype: str
+            """
+            salt = kwargs.get("salt", self.salt(**kwargs))
+            pepper = kwargs.get("pepper")
+            if pepper:
+                secret = "%s%s" % (secret, pepper)
+            return crypt.crypt(secret, salt)
+
+        @staticmethod
+        def salt_from_hash(_hash):
+            return "$".join(_hash.split("$")[:-1])
+
+        def salt(self, **kwargs):
+            raise NotImplementedError
+
+        def validate(self, secret, _hash, **kwargs):
+            salt = kwargs.get("salt", self.salt_from_hash(_hash))
+            kwargs['salt'] = salt
+            return compare_hash(self.generate(secret, **kwargs), _hash)
 
 
-class Sha256KeyManager(KeyManager):
+    class Sha512KeyManager(KeyManager):
 
-    def salt(self, **kwargs):
-        rounds = kwargs.get("rounds", 5000)
-        if (sys.version_info.major, sys.version_info.minor) > (3, 6):
-            salt = crypt.mksalt(method=crypt.METHOD_SHA256, rounds=rounds)
-        else:
-            salt = crypt.mksalt(method=crypt.METHOD_SHA256)
-        return salt
+        def salt(self, **kwargs):
+            rounds = kwargs.get("rounds", 5000)
+            if (sys.version_info.major, sys.version_info.minor) > (3, 6):
+                salt = crypt.mksalt(method=crypt.METHOD_SHA512, rounds=rounds)
+            else:
+                salt = crypt.mksalt(method=crypt.METHOD_SHA512)
+            return salt
+
+
+    class Sha256KeyManager(KeyManager):
+
+        def salt(self, **kwargs):
+            rounds = kwargs.get("rounds", 5000)
+            if (sys.version_info.major, sys.version_info.minor) > (3, 6):
+                salt = crypt.mksalt(method=crypt.METHOD_SHA256, rounds=rounds)
+            else:
+                salt = crypt.mksalt(method=crypt.METHOD_SHA256)
+            return salt

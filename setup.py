@@ -60,7 +60,6 @@ setup(
     install_requires=resolve_requires("requirements.txt"),
     classifiers=[
         "Development Status :: 5 - Production/Stable",
-       #
         "Environment :: Console",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
