@@ -22,6 +22,7 @@ from tests import get_fixture_path
 from tests import fixtures
 from cartola import config
 import unittest
+import logging
 
 
 class ConfigGetFromTestCase(unittest.TestCase):
@@ -103,3 +104,22 @@ class ConfigLoadYamlTestCase(unittest.TestCase):
         a_file_path = get_fixture_path("a_file.yml")
         a_config = config.load_yaml_file(a_file_path)
         self.assertEqual(a_config['a']['item'], "a value")
+
+
+class LogLevelTestCase(unittest.TestCase):
+
+    def test_log_level_from_string(self):
+        self.assertEqual(logging.WARNING,
+                         config.log_level_from_string("WARNING"))
+        self.assertEqual(logging.WARNING,
+                         config.log_level_from_string("WARN"))
+        self.assertEqual(logging.INFO,
+                         config.log_level_from_string("INFO"))
+        self.assertEqual(logging.ERROR,
+                         config.log_level_from_string("ERROR"))
+        self.assertEqual(logging.DEBUG,
+                         config.log_level_from_string("DEBUG"))
+        self.assertEqual(logging.CRITICAL,
+                         config.log_level_from_string("CRITICAL"))
+        self.assertEqual(logging.NOTSET,
+                         config.log_level_from_string("NOTSET"))

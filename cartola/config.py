@@ -16,6 +16,7 @@
 
 import importlib
 import yaml
+import logging
 
 
 def load_yaml_file(path):
@@ -116,3 +117,29 @@ def get_from_dict(conf, **kwargs):
     if reference_index is None:
         reference_index = "module"
     return get_from_module(conf[reference_index], conf[attr_index])
+
+
+def log_level_from_string(str_level):
+    """ Return the log level defined in the logging module by a sting.
+
+    :param str_level: Log level string
+    :return: The log level code
+    """
+    levels = {
+        'CRITICAL': logging.CRITICAL,
+        'ERROR': logging.ERROR,
+        'WARNING': logging.WARNING,
+        'WARN': logging.WARNING,
+        'INFO': logging.INFO,
+        'DEBUG': logging.DEBUG,
+        'NOTSET': logging.NOTSET,
+    }
+    try:
+        return levels[str_level.upper()]
+    except KeyError:
+        pass
+    except AttributeError:
+        if str_level in [logging.DEBUG, logging.INFO, logging.WARNING,
+                         logging.ERROR, logging.CRITICAL]:
+            return str_level
+    return logging.NOTSET
