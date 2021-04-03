@@ -13,4 +13,4 @@ We just needed a namespace to share some util modules, that's a great one.
 
 **Apache License V2.0**
 
-Copyright © 2015-2020 Flavio Garcia
+Copyright © 2015-2021 Flavio Garcia
