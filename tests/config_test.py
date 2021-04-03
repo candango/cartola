@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015-2020 Flavio Garcia
+# Copyright 2015-2021 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,10 +17,6 @@
 """
 Config functions tests
 """
-
-from __future__ import (absolute_import, division, print_function,
-                        with_statement)
-
 
 from tests import get_fixture_path
 from tests import fixtures
@@ -68,6 +64,34 @@ class ConfigGetFromTestCase(unittest.TestCase):
         self.assertEqual(fixtures.my_function, my_function)
         self.assertEqual(fixtures.my_string_value, my_function())
         my_class = config.get_from_string("tests.fixtures.MyClass")
+        an_object = my_class()
+        self.assertEqual(fixtures.MyClass, my_class)
+        self.assertEqual(fixtures.my_num_value, an_object.num_value)
+
+    def test_get_from_dict(self):
+        """ Test values returned by the get_from_dict
+        """
+        self.assertEqual(None, config.get_from_dict(
+            {'reference': "my_string_value1"}))
+        self.assertEqual(fixtures.my_string_value, config.get_from_dict(
+            {'reference': "tests.fixtures.my_string_value"}))
+        self.assertEqual(fixtures.my_num_value, config.get_from_dict(
+            {'module': "tests.fixtures", 'attr': "my_num_value"},
+            attr_index="attr"))
+        self.assertEqual(fixtures.my_list_value, config.get_from_dict(
+            {'module': "tests.fixtures", 'list': "my_list_value"},
+            attr_index="list"))
+        self.assertEqual(fixtures.my_dict_value, config.get_from_dict(
+            {'module': "tests.fixtures", 'dict': "my_dict_value"},
+            attr_index="dict"))
+        my_function = config.get_from_dict(
+            {'amodule': "tests.fixtures", 'function': "my_function"},
+            reference_index="amodule", attr_index="function")
+        self.assertEqual(fixtures.my_function, my_function)
+        self.assertEqual(fixtures.my_string_value, my_function())
+        my_class = config.get_from_dict(
+            {'module': "tests.fixtures", 'class': "MyClass"},
+            attr_index="class")
         an_object = my_class()
         self.assertEqual(fixtures.MyClass, my_class)
         self.assertEqual(fixtures.my_num_value, an_object.num_value)
