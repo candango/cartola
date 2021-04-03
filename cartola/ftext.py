@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 #
-# Copyright 2015-2020 Flavio Garcia
+# Copyright 2015-2021 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@ def pad(text, **kwargs):
     pep8 line of code. Add a size parameter will change the padded text size.
 
     :param text: The text to be padded.
-    :param fill: Character to be used to pad the text.
-    :param orientation: Orientation to place the fill character. Default is
+    :key fill: Character to be used to pad the text.
+    :key orientation: Orientation to place the fill character. Default is
     'left' but it can be also 'center' and 'right'.
-    :param size: Size to be used to pad the text. By default is 79.
+    :key size: Size to be used to pad the text. By default is 79.
     :return: A padded text. """
     size = kwargs.get("size", 79)
     fill = kwargs.get("fill", " ")
@@ -43,7 +43,7 @@ def columnize(text, **kwargs):
     """ Return a text broken in columns. The default columns size is 79 to be a
     valid pep8 line of code. Add the columns parameter to change this value.
     This function will analyze the text based on a category parameter.
-    When catetory value is 'sequence' the text will be broken equally in lines
+    When category value is 'sequence' the text will be broken equally in lines
     with same columns(character length) size and last line could be smaller
     than columns value.
     When category value is 'phrase' or 'phrases' the function break lines
@@ -53,14 +53,14 @@ def columnize(text, **kwargs):
     The broken text is separated by a newline character.
 
     :param text: The one line text to break in columns.
-    :param category: Category to decide the strategy to break the text in
+    :key category: Category to decide the strategy to break the text in
     columns. Can be 'sequence' or 'phrase' or 'phrases'. Default is 'sequence'.
-    :param fill: Character to be used to pad the text.
-    :param orientation: Orientation to place the fill character. Default is
+    :key fill: Character to be used to pad the text.
+    :key orientation: Orientation to place the fill character. Default is
     None but it can be also 'left' or 'center' or 'right'.
-    :param columns: Value to be used as size to break the text in columns. By
+    :key columns: Value to be used as size to break the text in columns. By
     default is 79.
-    :param newline: Character to be used to break to a new line. Default is \n
+    :key newline: Character to be used to break to a new line. Default is \n
     :return: A text broken in columns. """
 
     columns = kwargs.get("columns", 79)
