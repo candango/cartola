@@ -38,7 +38,11 @@ class NetworkTestCase(unittest.TestCase):
 
     def test_invalid_host_ping(self):
         """ Test if ping will return true for valid host """
-        self.assertFalse(net.ping("candngo.org"))
+        if os.getenv("NOICMP"):
+            logger.warning("ICMP test is disabled, probably it ICMP protocol"
+                           "should be blocked in this host.")
+        else:
+            self.assertFalse(net.ping("candngo.org"))
 
     def test_valid_host_up(self):
         """ Test if host will be up for valid host and port """
