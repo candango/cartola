@@ -26,7 +26,8 @@ def suite():
     alltests.addTests(testLoader.loadTestsFromModule(dt_test))
     alltests.addTests(testLoader.loadTestsFromModule(fs_test))
     alltests.addTests(testLoader.loadTestsFromModule(ftext_test))
-    alltests.addTests(testLoader.loadTestsFromModule(security_test))
+    alltests.addTests(testLoader.loadTestsFromModule(net_test))
+    alltests.addTests(testLoader.loadTestsFromModule(pagination_test))
     alltests.addTests(testLoader.loadTestsFromModule(security_test))
     alltests.addTests(testLoader.loadTestsFromModule(sysexits_test))
     return alltests
