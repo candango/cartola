@@ -26,7 +26,7 @@ class NetworkTestCase(unittest.TestCase):
 
     def test_valid_host_ping(self):
         """ Test if ping will return true for valid host """
-        self.assertTrue(net.ping("candango.org1"))
+        self.assertTrue(net.ping("candango.org"))
 
     def test_invalid_host_ping(self):
         """ Test if ping will return true for valid host """
