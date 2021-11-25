@@ -15,8 +15,8 @@
 # limitations under the License.
 
 import unittest
-from tests import (config_test, dt_test, fs_test, ftext_test, security_test,
-                   sysexits_test)
+from tests import (config_test, dt_test, fs_test, ftext_test, net_test,
+                   pagination_test, security_test, sysexits_test)
 
 
 def suite():
