@@ -1,5 +1,7 @@
 # Candango Cartola
 
+[![Requirements Status](https://requires.io/github/candango/cartola/requirements.svg?branch=develop)](https://requires.io/github/candango/cartola/requirements/?branch=develop)
+
 Candango's Shared Utilities.
 
 Cartola means Top Hat. You see? A magician gets a rabbit from a Top Hat, right?
