@@ -20,13 +20,21 @@ Network functions tests
 
 from cartola import net
 import unittest
+import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class NetworkTestCase(unittest.TestCase):
 
     def test_valid_host_ping(self):
         """ Test if ping will return true for valid host """
-        self.assertTrue(net.ping("github.com"))
+        if os.getenv("NOICMP"):
+            logger.warning("ICMP test is disabled, probably it ICMP protocol"
+                           "should be blocked in this host.")
+        else:
+            self.assertTrue(net.ping("github.com"))
 
     def test_invalid_host_ping(self):
         """ Test if ping will return true for valid host """

@@ -20,4 +20,4 @@ jobs:
         pip install -r requirements.txt
     - name: Testing code
       run: |
-        PYTHONPATH=$PYTHONPATH:. python tests/runtests.py
+        NOICMP=true PYTHONPATH=$PYTHONPATH:. python tests/runtests.py
