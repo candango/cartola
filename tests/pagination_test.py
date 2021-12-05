@@ -47,7 +47,7 @@ class PaginatorTestCase(unittest.TestCase):
         with warnings.catch_warnings(record=True) as w:
             paginator = pagination.Paginator(9, current_page=1,
                                              rows_per_page=10)
-            
+
             warning = w.pop()
             self.assertEqual("The parameter 'rows_per_page' is depreciated, "
                              "use 'per_page' instead.",
@@ -115,9 +115,20 @@ class PaginatorTestCase(unittest.TestCase):
     def test_offset(self):
         """ Test the offset method to be used directly with a database query
         implementation """
-        paginator = pagination.Paginator(9)
+        paginator = pagination.Paginator(1000)
+        self.assertEqual((0, 10), paginator.offset())
+        self.assertEqual((40, 10), paginator.offset(page=5))
+        print(paginator.pages)
+        try:
+            self.assertEqual((100, 10), paginator.offset(page=101))
+        except IndexError as ie:
+            message = "Page 101 is bigger than the number of pages 100."
+            self.assertEqual(ie.args[0], message)
 
     def test_offsets(self):
         """ Test the offset generator too loop through all offsets existent
         from page 1 to last page """
-        paginator = pagination.Paginator(9)
+        paginator = pagination.Paginator(1000)
+        self.assertEqual(100, len(paginator.offsets()))
+        self.assertEqual(86, len(paginator.offsets(page=15)))
+        self.assertEqual((590, 10), paginator.offsets(page=60)[0])
