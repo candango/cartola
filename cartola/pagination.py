@@ -220,6 +220,18 @@ class Paginator(object):
                 self._count % self._per_page) else (
                 self._count % self._per_page)
 
+    def offset(self, **kwargs):
+        page = kwargs.get("page", self.page)
+        if page > self.pages:
+            message = ("Page %s is bigger than the number of pages %s." % (
+                page, self.pages))
+            raise IndexError(message)
+        return self.first_row_in_page(page) - 1, self._per_page
+
+    def offsets(self, **kwargs):
+        page = kwargs.get("page", 1)
+        return [self.offset(page=p) for p in range(page, self.pages+1)]
+
     def first_row_in_page(self, page):
         return first_row_in_page(page, self._per_page)
 
