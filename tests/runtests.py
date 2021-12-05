@@ -14,9 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
+import os
 import unittest
-from tests import (config_test, dt_test, fs_test, ftext_test, security_test,
-                   sysexits_test)
+from tests import (config_test, dt_test, fs_test, ftext_test, net_test,
+                   pagination_test, security_test, sysexits_test)
+
+logger = logging.getLogger(__name__)
 
 
 def suite():
@@ -26,7 +30,12 @@ def suite():
     alltests.addTests(testLoader.loadTestsFromModule(dt_test))
     alltests.addTests(testLoader.loadTestsFromModule(fs_test))
     alltests.addTests(testLoader.loadTestsFromModule(ftext_test))
-    alltests.addTests(testLoader.loadTestsFromModule(security_test))
+    if os.getenv("NOICMP"):
+        logger.warning("NOICMP environment variable suppressing net_test case."
+                       " Probably the ICMP protocol is blocked in this host.")
+    else:
+        alltests.addTests(testLoader.loadTestsFromModule(net_test))
+    alltests.addTests(testLoader.loadTestsFromModule(pagination_test))
     alltests.addTests(testLoader.loadTestsFromModule(security_test))
     alltests.addTests(testLoader.loadTestsFromModule(sysexits_test))
     return alltests
