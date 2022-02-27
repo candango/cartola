@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015-2021 Flavio Garcia
+# Copyright 2015-2022 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 import logging
 import os
 import unittest
-from tests import (config_test, dt_test, fs_test, ftext_test, net_test,
-                   pagination_test, security_test, sysexits_test)
+from tests import (config_test, dt_test, exception_test, fs_test, ftext_test,
+                   net_test, pagination_test, security_test, sysexits_test)
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +28,7 @@ def suite():
     alltests = unittest.TestSuite()
     alltests.addTests(testLoader.loadTestsFromModule(config_test))
     alltests.addTests(testLoader.loadTestsFromModule(dt_test))
+    alltests.addTests(testLoader.loadTestsFromModule(exception_test))
     alltests.addTests(testLoader.loadTestsFromModule(fs_test))
     alltests.addTests(testLoader.loadTestsFromModule(ftext_test))
     if os.getenv("NOICMP"):
