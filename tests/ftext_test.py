@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 #
-# Copyright 2015-2021 Flavio Garcia
+# Copyright 2015-2022 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,13 +44,3 @@ class FtextTestCase(unittest.TestCase):
         # Centered from 0 to 36 and 43 and beyond
         self.assertEqual("", padded_text_center[0:36].replace(" ", ""))
         self.assertEqual("", padded_text_center[43:].replace(" ", ""))
-
-    def test_default_fstext_pad(self):
-        """ Test default text pad """
-        text = "my test"
-        padded_text = ftext.pad(text)
-        padded_text_x = padded_text[len(text):].split(" ")
-        self.assertEqual(79, len(padded_text))
-        self.assertEqual(79 + 1 - len(text), len(padded_text_x))
-        for i in range(0, len(padded_text_x) - 1):
-            self.assertEqual(padded_text_x[0], padded_text_x[i])

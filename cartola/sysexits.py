@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 #
-# Copyright 2015-2021 Flavio Garcia
+# Copyright 2015-2022 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import sys
+import warnings
 
 """
 The Explanation from the codes are described here: https://bit.ly/2D2ZFY9
@@ -79,9 +80,15 @@ EX_CONFIG = 78
 EX_MAX = 78
 
 
-def exit(error):
+def exit_error(error):
     sys.exit(error)
 
 
 def exit_fatal(signal):
-    sys.modules[__name__].exit(EX_FATAL_ERROR + signal)
+    sys.modules[__name__].exit_error(EX_FATAL_ERROR + signal)
+
+
+def exit(signal):
+    warnings.warn("The function 'exit' is depreciated, use 'exit_error' "
+                  "instead.", DeprecationWarning, 2)
+    exit_error(signal)
