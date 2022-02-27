@@ -75,15 +75,13 @@ if os.name == 'posix':
             :rtype: KeyManager
             """
             managers = {
-                KeyManager.METHOD_BLOWFISH: BlowfishKeyManager,
                 KeyManager.METHOD_CRYPT: CryptKeyManager,
                 KeyManager.METHOD_MD5: Md5Manager,
                 KeyManager.METHOD_SHA512: Sha512KeyManager,
                 KeyManager.METHOD_SHA256: Sha256KeyManager,
-                # crypt.METHOD_MD5: NotImplemented,
             }
-            if (sys.version_info.major, sys.version_info.minor) <= (3, 6):
-                managers.pop(KeyManager.METHOD_BLOWFISH)
+            if (sys.version_info.major, sys.version_info.minor) >= (3, 7):
+                managers[KeyManager.METHOD_BLOWFISH] = BlowfishKeyManager
             manager = managers.get(method, NotImplemented)
             return manager()
 
