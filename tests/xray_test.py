@@ -51,11 +51,13 @@ class XrayTestCase(unittest.TestCase):
         properly."""
         # Testing passing a class as target
         decorators = xray.class_decorators(MyClass)
+        print(decorators)
         self.assertTrue("MyClass" in decorators)
         self.assertTrue(decorators['MyClass'][0], "decorator1")
 
         # Testing passing a module as target
         decorators = xray.class_decorators(sys.modules[__name__])
+        print(decorators)
         self.assertTrue("MyClass" in decorators)
         self.assertEqual(decorators['MyClass'][0], "decorator1")
         self.assertTrue("XrayTestCase" in decorators)
