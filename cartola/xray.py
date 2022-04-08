@@ -33,15 +33,10 @@ def class_decorators(target):
         decorators[node.name] = []
         print(node)
         for n in node.decorator_list:
-            pprint(n)
-            name = ""
-            if isinstance(n, ast.Call):
-                name = n.func.attr if isinstance(n.func,
-                                                 ast.Attribute) else n.func.id
-            else:
-                name = n.attr if isinstance(n, ast.Attribute) else n.id
-
-            decorators[node.name].append(name)
+            if isinstance(n, ast.Name):
+                name = n.id
+                print(n.id)
+                decorators[node.name].append(name)
     node_iter = ast.NodeVisitor()
     node_iter.visit_ClassDef = visit_class_def
     node_iter.visit(ast.parse(inspect.getsource(target)))
@@ -63,14 +58,10 @@ def methods_decorators(target):
         decorators[node.name] = []
         print(node)
         for n in node.decorator_list:
-            pprint(n)
-            n: ast.Name = n
-            name = ""
-            if isinstance(n, ast.Call):
-                name = n.func.attr if isinstance(n.func,
-                                                 ast.Attribute) else n.func.id
-            else:
-                name = n.attr if isinstance(n, ast.Attribute) else n.id
+            if isinstance(n, ast.Name):
+                name = n.id
+                print(n.id)
+                decorators[node.name].append(name)
 
             decorators[node.name].append(name)
     node_iter = ast.NodeVisitor()
