@@ -15,6 +15,7 @@
 # limitations under the License.
 import ast
 import inspect
+import pprint
 
 
 def class_decorators(target):
@@ -32,7 +33,7 @@ def class_decorators(target):
         decorators[node.name] = []
         print(node)
         for n in node.decorator_list:
-            print(n)
+            pprint(n)
             name = ""
             if isinstance(n, ast.Call):
                 name = n.func.attr if isinstance(n.func,
@@ -62,7 +63,7 @@ def methods_decorators(target):
         decorators[node.name] = []
         print(node)
         for n in node.decorator_list:
-            print(n)
+            pprint(n)
             n: ast.Name = n
             name = ""
             if isinstance(n, ast.Call):
