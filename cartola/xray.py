@@ -31,7 +31,7 @@ def class_decorators(target):
 
     def visit_class_def(node: ast.ClassDef):
         decorators[node.name] = []
-        print(node)
+        print(node.decorator_list)
         for n in node.decorator_list:
             print(n)
             if isinstance(n, ast.Name):
