@@ -33,6 +33,7 @@ def class_decorators(target):
         decorators[node.name] = []
         print(node)
         for n in node.decorator_list:
+            print(n)
             if isinstance(n, ast.Name):
                 name = n.id
                 print(n.id)
@@ -56,14 +57,10 @@ def methods_decorators(target):
 
     def visit_func_def(node: ast.FunctionDef):
         decorators[node.name] = []
-        print(node)
         for n in node.decorator_list:
             if isinstance(n, ast.Name):
                 name = n.id
-                print(n.id)
                 decorators[node.name].append(name)
-
-            decorators[node.name].append(name)
     node_iter = ast.NodeVisitor()
     node_iter.visit_FunctionDef = visit_func_def
     node_iter.visit(ast.parse(inspect.getsource(target)))
