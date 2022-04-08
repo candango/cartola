@@ -30,7 +30,9 @@ def class_decorators(target):
 
     def visit_class_def(node: ast.ClassDef):
         decorators[node.name] = []
+        print(node)
         for n in node.decorator_list:
+            print(n)
             name = ""
             if isinstance(n, ast.Call):
                 name = n.func.attr if isinstance(n.func,
@@ -58,8 +60,9 @@ def methods_decorators(target):
 
     def visit_func_def(node: ast.FunctionDef):
         decorators[node.name] = []
-
+        print(node)
         for n in node.decorator_list:
+            print(n)
             n: ast.Name = n
             name = ""
             if isinstance(n, ast.Call):
