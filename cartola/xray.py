@@ -15,33 +15,34 @@
 # limitations under the License.
 import ast
 import inspect
-import pprint
+import sys
 
 
-def class_decorators(target):
-    """ Return a dictionary with all decorators for each class found in the
-    given target.
-    The target could be either a class or a module
+if (sys.version_info.major, sys.version_info.minor) > (3, 8):
+    def class_decorators(target):
+        """ Return a dictionary with all decorators for each class found in the
+        given target.
+        The target could be either a class or a module
 
-    From https://bit.ly/3v7KLtm
-    :param target: A class or module
-    :return: An dictionary with all decorators for each class found in target
-    """
-    decorators = {}
+        # Won't work on python 3.6 to 3.8. This is good for 3.9 and upwards.
 
-    def visit_class_def(node: ast.ClassDef):
-        decorators[node.name] = []
-        print(node.decorator_list)
-        for n in node.decorator_list:
-            print(n)
-            if isinstance(n, ast.Name):
-                name = n.id
-                print(n.id)
-                decorators[node.name].append(name)
-    node_iter = ast.NodeVisitor()
-    node_iter.visit_ClassDef = visit_class_def
-    node_iter.visit(ast.parse(inspect.getsource(target)))
-    return decorators
+        From https://bit.ly/3v7KLtm
+        :param target: A class or module
+        :return: An dictionary with all decorators for each class found in
+        target
+        """
+        decorators = {}
+
+        def visit_class_def(node: ast.ClassDef):
+            decorators[node.name] = []
+            for n in node.decorator_list:
+                if isinstance(n, ast.Name):
+                    name = n.id
+                    decorators[node.name].append(name)
+        node_iter = ast.NodeVisitor()
+        node_iter.visit_ClassDef = visit_class_def
+        node_iter.visit(ast.parse(inspect.getsource(target)))
+        return decorators
 
 
 def methods_decorators(target):

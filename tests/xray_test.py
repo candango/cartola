@@ -46,22 +46,21 @@ class MyClass:
 
 class XrayTestCase(unittest.TestCase):
 
-    def test_class_decorators(self):
-        """ Test if the method class_decorators will return decorators
-        properly."""
-        # Testing passing a class as target
-        decorators = xray.class_decorators(MyClass)
-        print(decorators)
-        self.assertTrue("MyClass" in decorators)
-        self.assertTrue(decorators['MyClass'][0], "decorator1")
+    if (sys.version_info.major, sys.version_info.minor) > (3, 8):
+        def test_class_decorators(self):
+            """ Test if the method class_decorators will return decorators
+            properly."""
+            # Testing passing a class as target
+            decorators = xray.class_decorators(MyClass)
+            self.assertTrue("MyClass" in decorators)
+            self.assertTrue(decorators['MyClass'][0], "decorator1")
 
-        # Testing passing a module as target
-        decorators = xray.class_decorators(sys.modules[__name__])
-        print(decorators)
-        self.assertTrue("MyClass" in decorators)
-        self.assertEqual(decorators['MyClass'][0], "decorator1")
-        self.assertTrue("XrayTestCase" in decorators)
-        self.assertEqual(len(decorators['XrayTestCase']), 0)
+            # Testing passing a module as target
+            decorators = xray.class_decorators(sys.modules[__name__])
+            self.assertTrue("MyClass" in decorators)
+            self.assertEqual(decorators['MyClass'][0], "decorator1")
+            self.assertTrue("XrayTestCase" in decorators)
+            self.assertEqual(len(decorators['XrayTestCase']), 0)
 
     def test_methods_decorators(self):
         """ Test if the get_method_decorators will return decorators
