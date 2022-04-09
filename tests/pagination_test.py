@@ -112,7 +112,6 @@ class PaginatorTestCase(unittest.TestCase):
         paginator = pagination.Paginator(1000)
         self.assertEqual((0, 10), paginator.offset())
         self.assertEqual((40, 10), paginator.offset(page=5))
-        print(paginator.pages)
         try:
             self.assertEqual((100, 10), paginator.offset(page=101))
         except IndexError as ie:
