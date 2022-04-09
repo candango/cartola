@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015-2022 Flavio Garcia
+# Copyright 2015-2022 Flávio Gonçalves Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@ import logging
 import os
 import unittest
 from tests import (config_test, dt_test, exception_test, fs_test, ftext_test,
-                   net_test, pagination_test, security_test, sysexits_test)
+                   net_test, pagination_test, security_test, sysexits_test,
+                   xray_test)
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +40,7 @@ def suite():
     alltests.addTests(testLoader.loadTestsFromModule(pagination_test))
     alltests.addTests(testLoader.loadTestsFromModule(security_test))
     alltests.addTests(testLoader.loadTestsFromModule(sysexits_test))
+    alltests.addTests(testLoader.loadTestsFromModule(xray_test))
     return alltests
 
 
