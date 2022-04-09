@@ -18,6 +18,33 @@ import inspect
 import sys
 
 
+def resolve_node_decorator(node: ast.Attribute | ast.Name, resolved_node=None):
+    if isinstance(node, ast.Attribute):
+        resolved_node = (node.attr if resolved_node is None else
+                         "%s.%s" % (node.attr, resolved_node))
+    if isinstance(node, ast.Name):
+        resolved_node = (node.id if resolved_node is None else
+                         "%s.%s" % (node.id, resolved_node))
+    if hasattr(node, "value"):
+        resolved_node = resolve_node_decorator(node.value, resolved_node)
+    return resolved_node
+
+
+def node_to_decorator(node: ast.Attribute | ast.Name | ast.Call):
+    if isinstance(node, ast.Call):
+        return resolve_node_decorator(node.func)
+    else:
+        return resolve_node_decorator(node)
+
+
+def visit_func_class_def(node: ast.ClassDef | ast.FunctionDef,
+                         decorators: dict) -> None:
+    decorators[node.name] = []
+    for n in node.decorator_list:
+        name = node_to_decorator(n)
+        decorators[node.name].append(name)
+
+
 if (sys.version_info.major, sys.version_info.minor) > (3, 8):
     def class_decorators(target):
         """ Return a dictionary with all decorators for each class found in the
@@ -34,11 +61,7 @@ if (sys.version_info.major, sys.version_info.minor) > (3, 8):
         decorators = {}
 
         def visit_class_def(node: ast.ClassDef):
-            decorators[node.name] = []
-            for n in node.decorator_list:
-                if isinstance(n, ast.Name):
-                    name = n.id
-                    decorators[node.name].append(name)
+            visit_func_class_def(node, decorators)
         node_iter = ast.NodeVisitor()
         node_iter.visit_ClassDef = visit_class_def
         node_iter.visit(ast.parse(inspect.getsource(target)))
@@ -57,11 +80,7 @@ def methods_decorators(target):
     decorators = {}
 
     def visit_func_def(node: ast.FunctionDef):
-        decorators[node.name] = []
-        for n in node.decorator_list:
-            if isinstance(n, ast.Name):
-                name = n.id
-                decorators[node.name].append(name)
+        visit_func_class_def(node, decorators)
     node_iter = ast.NodeVisitor()
     node_iter.visit_FunctionDef = visit_func_def
     node_iter.visit(ast.parse(inspect.getsource(target)))
