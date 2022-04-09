@@ -18,7 +18,7 @@ import inspect
 import sys
 
 
-def resolve_node_decorator(node: ast.Attribute | ast.Name, resolved_node=None):
+def resolve_node_decorator(node, resolved_node=None):
     if isinstance(node, ast.Attribute):
         resolved_node = (node.attr if resolved_node is None else
                          "%s.%s" % (node.attr, resolved_node))
@@ -30,15 +30,14 @@ def resolve_node_decorator(node: ast.Attribute | ast.Name, resolved_node=None):
     return resolved_node
 
 
-def node_to_decorator(node: ast.Attribute | ast.Name | ast.Call):
+def node_to_decorator(node):
     if isinstance(node, ast.Call):
         return resolve_node_decorator(node.func)
     else:
         return resolve_node_decorator(node)
 
 
-def visit_func_class_def(node: ast.ClassDef | ast.FunctionDef,
-                         decorators: dict) -> None:
+def visit_func_class_def(node, decorators: dict) -> None:
     decorators[node.name] = []
     for n in node.decorator_list:
         name = node_to_decorator(n)
