@@ -17,7 +17,7 @@
 """
 Datetime tests
 """
-
+import tests.bogus
 from cartola import xray
 import functools
 import unittest
@@ -40,6 +40,7 @@ class MyClass:
         return "a property value"
 
     @decorator1
+    @tests.bogus.decorator2
     def test(self):
         pass
 
@@ -70,3 +71,4 @@ class XrayTestCase(unittest.TestCase):
         self.assertEqual(decorators['a_property'][0], "property")
         self.assertTrue("test" in decorators)
         self.assertEqual(decorators['test'][0], "decorator1")
+        self.assertEqual(decorators['test'][1], "tests.bogus.decorator2")
