@@ -86,7 +86,7 @@ def s_write(path: str, data: str):
     _write(path, data)
 
 
-def _write(path: str, data: str | bytes, binary: bool = False):
+def _write(path: str, data, binary: bool = False):
     """ Write data to a file located in a given path. If binary is true will
     open the file with the binary flag and data should be bytes instead of
     string.
@@ -102,7 +102,7 @@ def _write(path: str, data: str | bytes, binary: bool = False):
         f.write(data)
 
 
-def write(path: str, data: str | bytes, binary: bool = False):
+def write(path: str, data, binary: bool = False):
     """ Write data to a file located in a given path. If binary is true will
     open the file with the binary flag and data should be bytes instead of
     string.
