@@ -121,17 +121,17 @@ class FsBasicIOOperationsTestCase(unittest.TestCase):
         self.assertIsInstance(value, bytes)
         self.assertEqual(expected, value)
 
-    def test_string_fs_write(self):
+    def test_fs_s_write(self):
         """ Write in a file using data as string. """
         data = "My text to write.\n"
-        fs.write(self.file_to_write_path, data)
+        fs.s_write(self.file_to_write_path, data)
         self.assertTrue(os.path.exists(self.file_to_write_path))
         self.assertEqual(data, fs.read(self.file_to_write_path))
 
-    def test_binary_fs_write(self):
+    def test_fs_b_write(self):
         """ Write in a file using data as bytes. """
         data = b"My text to write.\n"
-        fs.write(self.file_to_write_path, data, True)
+        fs.b_write(self.file_to_write_path, data)
         self.assertTrue(os.path.exists(self.file_to_write_path))
         self.assertEqual(data, fs.read(self.file_to_write_path, True))
 

@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 #
-# Copyright 2015-2020 Flavio Garcia
+# Copyright 2015-2023 Flávio Gonçalves Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 import os
 import logging
+import warnings
+
 logger = logging.getLogger(__name__)
 
 
@@ -56,7 +58,35 @@ def get_file_extension(filename):
     return None
 
 
-def write(path, data, binary=False):
+def b_write(path: str, data: bytes):
+    """ Write data in binary mode to a file located in a given path.
+    This is an alias to:
+
+    >>> my_data = b"a data to be writen"
+    >>> b_write("my_path", my_data)
+
+    :param str path: Path where the file is located
+    :param str|bytes data: Data to be writen in the file. If binary is true
+    data must be in bytes instead of string.
+    """
+    _write(path, data, True)
+
+
+def s_write(path: str, data: str):
+    """ Write data in string mode to a file located in a given path.
+    This is an alias to:
+
+    >>> my_data = "a data to be writen"
+    >>> s_write("my_path", my_data)
+
+    :param str path: Path where the file is located
+    :param str|bytes data: Data to be writen in the file. If binary is true
+    data must be in bytes instead of string.
+    """
+    _write(path, data)
+
+
+def _write(path: str, data: str | bytes, binary: bool = False):
     """ Write data to a file located in a given path. If binary is true will
     open the file with the binary flag and data should be bytes instead of
     string.
@@ -72,6 +102,20 @@ def write(path, data, binary=False):
         f.write(data)
 
 
+def write(path: str, data: str | bytes, binary: bool = False):
+    """ Write data to a file located in a given path. If binary is true will
+    open the file with the binary flag and data should be bytes instead of
+    string.
+    :param str path: Path where the file is located
+    :param str|bytes data: Data to be writen in the file. If binary is true
+    data must be in bytes instead of string.
+    :param bool binary: If true will read the file with the binary flag
+    """
+    warnings.warn("The function 'write' is depreciated, use either 'b_write' "
+                  "or s_write.", DeprecationWarning, 2)
+    _write(path, data, binary)
+
+
 def read(path, binary=False):
     """
     Read a file located at the given path. If binary is true will return bytes
@@ -80,7 +124,6 @@ def read(path, binary=False):
     :param str path: Path where the file is located
     :param bool binary: If true will read the file with the binary flag
     :return str|bytes: File content string or bytes. """
-    data = None
     mode = "r"
     if binary:
         mode = "rb"
@@ -99,8 +142,8 @@ def touch(path):
 
 
 def remove_existing(file_path):
-    """ Remove a file in a path if it exists and returns true. If file doesn't
-    exists returns false.
+    """ Remove a file in a path if it exists and returns true. If the file
+    doesn't exist returns false.
 
     :param file_path: The file path
     :return bool: True if file exits
@@ -113,7 +156,7 @@ def remove_existing(file_path):
 
 def rmdir_existing(dir_path):
     """ Remove a directory in a path if it exists and returns true. If
-    directory doesn't exists returns false.
+    directory doesn't exist returns false.
 
     :param dir_path: The directory path
     :return bool: True if directory exits
