@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 #
-# Copyright 2015-2023 Flávio Gonçalves Garcia
+# Copyright 2015-2023 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -137,7 +137,7 @@ def read(path, binary=False):
 
 def touch(path):
     """ Creates a file located at the given path. """
-    with open(path, 'a') as f:
+    with open(path, 'a') as _:
         os.utime(path, None)
 
 

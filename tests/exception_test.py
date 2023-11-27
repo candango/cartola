@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 #
-# Copyright 2015-2022 Flavio Garcia
+# Copyright 2015-2023 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class MockLoggingHandler(logging.Handler):
     Messages are available from an instance's ``messages`` dict, in order,
     indexed by a lowercase log level string (e.g., 'debug', 'info', etc.).
 
-    SEE: https://stackoverflow.com/a/20553331/2887989
+    See: https://stackoverflow.com/a/20553331/2887989
     """
 
     def __init__(self, *args, **kwargs):
@@ -81,7 +81,7 @@ class ExceptionTestCase(unittest.TestCase):
         line 83. If the line changes this test will fail."""
         try:
             1/0
-        except:
+        except ZeroDivisionError:
             logger.warning("The message", exc_info=exception.full_exc_info())
             for record in self.exception_log_messages['warning']:
                 tb_frame = record.exc_info[2]

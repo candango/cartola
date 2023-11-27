@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 #
-# Copyright 2015-2022 Flavio Garcia
+# Copyright 2015-2023 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ class PaginatorTestCase(unittest.TestCase):
     def setUp(self):
         self.logger = logging.getLogger()
         self.handler = WarningsHandler()
-        #self.logger.addHandler(WarningsHandler())
+        # self.logger.addHandler(WarningsHandler())
         warnings.simplefilter("always")
 
     def tearDown(self):
