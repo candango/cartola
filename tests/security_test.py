@@ -18,16 +18,21 @@
 Security tests
 """
 
-from cartola.security import KeyManager
+from cartola.security import random_string
 import unittest
 
 
-class KeyManagerTestCase(unittest.TestCase):
+class RandomStringTestCase(unittest.TestCase):
 
-    def setUp(self):
-        self.password = "A_secret_text"
-        self.bad_password = "A_bad_secret_text"
-        self.pepper = "We_have_salt_and_need_pepper"
+    def test_random_string(self):
+        """ Random string generation """
+        self.assertNotEqual(random_string(), None)
+        self.assertEqual(len(random_string()), 5)
+        self.assertEqual(len(random_string(10)), 10)
+        self.assertEqual(len(random_string(10, upper_chars=False)), 10)
+        self.assertEqual(len(random_string(10, punctuation=True)), 10)
+        self.assertEqual(len(random_string(10, upper_chars=False,
+                                           punctuation=True)), 10)
 
     def test_sha512_without_pepper(self):
         """ Manager generation and verification on SHA512 without pepper"""

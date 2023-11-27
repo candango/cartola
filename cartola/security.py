@@ -20,7 +20,6 @@ if os.name == 'posix':
 from hmac import compare_digest as compare_hash
 import logging
 import string
-import sys
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +28,6 @@ logger = logging.getLogger(__name__)
 # Recommended here: http://bit.ly/2fm97H3
 # Confirmed here:
 # https://docs.python.org/2/library/random.html#random.SystemRandom
-# TODO: Use that after 3.6 https://bit.ly/2wvubJ6
 def random_string(length=5, upper_chars=True, punctuation=False):
     """
     Generate a random string with the size equal to the given length.
@@ -44,14 +42,8 @@ def random_string(length=5, upper_chars=True, punctuation=False):
         chars += string.ascii_uppercase
     if punctuation:
         chars += string.punctuation
-    if sys.version_info < (3, 6):
-        import random
-        return ''.join(
-            random.SystemRandom().choice(chars) for _ in range(length)
-        )
-    else:
-        import secrets
-        return ''.join(secrets.choice(chars) for _ in range(length))
+    import secrets
+    return ''.join(secrets.choice(chars) for _ in range(length))
 
 
 # Key manager functionality is available only for posix.

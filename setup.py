@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015-2023 Flávio Gonçalves Garcia
+# Copyright 2015-2023 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,9 +28,6 @@ except ImportError:
           "--upgrade pip\".")
     sys.exit(1)
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
-
 
 # Solution from http://bit.ly/29Yl8VN
 def resolve_requires(requirements_file):
@@ -47,6 +44,9 @@ def resolve_requires(requirements_file):
         return [str(pr.requirement) for pr in requirements]
 
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name="cartola",
     version=cartola.get_version(),
@@ -58,6 +58,7 @@ setup(
     author=cartola.get_author(),
     author_email=cartola.get_author_email(),
     install_requires=resolve_requires("requirements.txt"),
+    python_requires=">= 3.7",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
