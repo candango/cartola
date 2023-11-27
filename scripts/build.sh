@@ -18,6 +18,5 @@
 ##
 ## Author: Flavio Garcia <piraz@candango.org>
 
-python setup.py bdist_wheel --universal
-python setup.py sdist
+python -m build
 rm -rf build
