@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 #
-# Copyright 2015-2022 Flavio Garcia
+# Copyright 2015-2023 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -51,8 +51,7 @@ def random_string(length=5, upper_chars=True, punctuation=False):
 if os.name == 'posix':
     class KeyManager(object):
         # following: https://crackstation.net/hashing-security.htm
-        if (sys.version_info.major, sys.version_info.minor) > (3, 6):
-            METHOD_BLOWFISH = crypt.METHOD_BLOWFISH
+        METHOD_BLOWFISH = crypt.METHOD_BLOWFISH
         METHOD_MD5 = crypt.METHOD_MD5
         METHOD_CRYPT = crypt.METHOD_CRYPT
         METHOD_SHA512 = crypt.METHOD_SHA512
@@ -60,10 +59,10 @@ if os.name == 'posix':
 
         @staticmethod
         def get_manager(method):
-            """ Return a key manager by it's key method.
+            """ Return a key manager by its key method.
 
             :param method:
-            :return: A key manger by it's key method
+            :return: A key manger by its key method
             :rtype: KeyManager
             """
             managers = {
@@ -71,9 +70,8 @@ if os.name == 'posix':
                 KeyManager.METHOD_MD5: Md5Manager,
                 KeyManager.METHOD_SHA512: Sha512KeyManager,
                 KeyManager.METHOD_SHA256: Sha256KeyManager,
+                KeyManager.METHOD_BLOWFISH: BlowfishKeyManager,
             }
-            if (sys.version_info.major, sys.version_info.minor) >= (3, 7):
-                managers[KeyManager.METHOD_BLOWFISH] = BlowfishKeyManager
             manager = managers.get(method, NotImplemented)
             return manager()
 
@@ -105,10 +103,7 @@ if os.name == 'posix':
 
         def _salt_it(self, method, **kwargs):
             rounds = kwargs.get("rounds")
-            if (sys.version_info.major, sys.version_info.minor) > (3, 6):
-                salt = crypt.mksalt(method=method, rounds=rounds)
-            else:
-                salt = crypt.mksalt(method=method)
+            salt = crypt.mksalt(method=method, rounds=rounds)
             return salt
 
         def validate(self, secret, _hash, **kwargs):
@@ -116,30 +111,25 @@ if os.name == 'posix':
             kwargs['salt'] = salt
             return compare_hash(self.generate(secret, **kwargs), _hash)
 
-
     class BlowfishKeyManager(KeyManager):
 
         def salt(self, **kwargs):
             return self._salt_it(crypt.METHOD_BLOWFISH, **kwargs)
-
 
     class CryptKeyManager(KeyManager):
 
         def salt(self, **kwargs):
             return self._salt_it(crypt.METHOD_CRYPT, **kwargs)
 
-
     class Md5Manager(KeyManager):
 
         def salt(self, **kwargs):
             return self._salt_it(crypt.METHOD_MD5, **kwargs)
 
-
     class Sha512KeyManager(KeyManager):
 
         def salt(self, **kwargs):
             return self._salt_it(crypt.METHOD_SHA512, **kwargs)
-
 
     class Sha256KeyManager(KeyManager):
 
