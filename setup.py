@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015-2023 Flavio Garcia
+# Copyright 2015-2025 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ setup(
     author=cartola.get_author(),
     author_email=cartola.get_author_email(),
     install_requires=resolve_requires("requirements.txt"),
-    python_requires=">= 3.7",
+    python_requires=">= 3.9",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
