@@ -14,9 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__author__ = "Flavio Garcia <piraz@candango.org>"
-__version__ = (0, 19)
-__licence__ = "Apache License V2.0"
+__version__ = (0, 20)
 
 
 def get_version():
