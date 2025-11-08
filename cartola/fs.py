@@ -1,6 +1,4 @@
-# -*- coding: UTF-8 -*-
-#
-# Copyright 2015-2023 Flavio Garcia
+# Copyright 2015-2025 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,6 +14,7 @@
 
 import os
 import logging
+from typing import Optional, List, Union
 import warnings
 
 logger = logging.getLogger(__name__)
@@ -56,6 +55,57 @@ def get_file_extension(filename):
         if filename_x[-1].strip() != "":
             return filename_x[-1]
     return None
+
+
+def _append(path: str, data: Union[str, bytes], binary: bool = False):
+    """
+    Appends data to a file located in a given path.
+    If binary is true will open the file with the binary flag.
+
+    :param str path: Path where the file is located.
+    :param str|bytes data: Data to be appended to the file.
+    :param bool binary: If True, opens the file in binary append mode ('ab').
+    """
+    mode = "a"
+    if binary:
+        mode = "ab"
+        if not isinstance(data, bytes):
+            raise TypeError("Data must be bytes when appending in binary "
+                            "mode.")
+    else:
+        if not isinstance(data, str):
+            raise TypeError("Data must be a string when appending in text "
+                            "mode.")
+
+    dir_name = os.path.dirname(path)
+    if dir_name and not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+    try:
+        with open(path, mode) as f:
+            f.write(data)
+    except Exception as e:
+        print(f"ERROR: Failed to append to file '{path}' in mode '{mode}'. "
+              f"Reason: {e}")
+
+
+def b_append(path: str, data: bytes):
+    """
+    Appends data in binary mode ('ab') to a file located in a given path.
+
+    :param str path: Path where the file is located.
+    :param bytes data: Data to be written (must be bytes).
+    """
+    _append(path, data, True)
+
+
+def s_append(path: str, data: str):
+    """
+    Appends data in string mode ('a') to a file located in a given path.
+
+    :param str path: Path where the file is located.
+    :param str data: Data to be written (must be string).
+    """
+    _append(path, data, False)
 
 
 def b_write(path: str, data: bytes):

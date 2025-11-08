@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-#
-# Copyright 2015-2021 Flavio Garcia
+# Copyright 2015-2025 Flavio Garcia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -158,6 +156,27 @@ class FsBasicIOOperationsTestCase(unittest.TestCase):
         value = fs.read(self.file_to_read_path, True)
         self.assertIsInstance(value, bytes)
         self.assertEqual(expected, value)
+
+    def test_fs_b_append(self):
+        """ Append in a file using data as bytes. """
+        data = b"My text to append.\n"
+        data_appended = b"My text to append.\nMy text to append.\n"
+        fs.b_append(self.file_to_append_path, data)
+        self.assertTrue(os.path.exists(self.file_to_append_path))
+        self.assertEqual(data, fs.read(self.file_to_append_path, True))
+        fs.b_append(self.file_to_append_path, data)
+        self.assertEqual(data_appended,
+                         fs.read(self.file_to_append_path, True))
+
+    def test_fs_s_append(self):
+        """ Append in a file using data as string. """
+        data = "My text to append.\n"
+        data_appended = "My text to append.\nMy text to append.\n"
+        fs.s_append(self.file_to_append_path, data)
+        self.assertTrue(os.path.exists(self.file_to_append_path))
+        self.assertEqual(data, fs.read(self.file_to_append_path))
+        fs.s_append(self.file_to_append_path, data)
+        self.assertEqual(data_appended, fs.read(self.file_to_append_path))
 
     def test_fs_s_write(self):
         """ Write in a file using data as string. """
