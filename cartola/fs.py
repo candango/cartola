@@ -116,23 +116,87 @@ def write(path: str, data, binary: bool = False):
     _write(path, data, binary)
 
 
-def read(path, binary=False):
+def _read_and_slice(path: str, mode: str = "r", offset: Optional[int] = None,
+                    start_line: Optional[int] = None,
+                    limit: Optional[int] = None
+                    ) -> List[str]:
     """
-    Read a file located at the given path. If binary is true will return bytes
-    instead of string.
+    Reads a file line-by-line and returns a list of lines, sliced
+    according to the offset, start_line, and limit parameters.
 
-    :param str path: Path where the file is located
-    :param bool binary: If true will read the file with the binary flag
-    :return str|bytes: File content string or bytes. """
-    mode = "r"
-    if binary:
-        mode = "rb"
+    :param str path: Path where the file is located.
+    :param str mode: Mode to be used file opening the file, r is the default
+    mode value.
+    :param Optional[int] offset: Number of lines for head/tail if
+    start_line/limit are None.
+        - Positive integer (e.g., 10): Return the first 10 lines (head).
+        - Negative integer (e.g., -10): Return the last 10 lines (tail).
+    :param Optional[int] start_line: 1-based index of the line to start reading
+    from.
+    :param Optional[int] limit: The maximum number of lines to read starting
+    from start_line.
+    :return List[str]: A list of the requested lines.
+    """
+    abs_path = os.path.abspath(path)
+    try:
+        with open(abs_path, mode) as f:
+            lines = f.readlines()
+    except FileNotFoundError:
+        return []
+    except Exception as e:
+        print(f"ERROR: Failed to read file '{path}'. Reason: {e}")
+        return []
+
+    #  Handle Start Line and Limit
+    if start_line is not None and limit is not None:
+        # Convert 1-based index to 0-based index
+        start_index = max(0, start_line - 1)
+        end_index = start_index + limit
+
+        return lines[start_index:end_index]
+
+    # Handle Offset (Head/Tail, fallback if start_line/limit not used)
+    elif offset is not None and offset != 0:
+        if offset > 0:
+            # Head: return the first 'offset' lines
+            return lines[:offset]
+        else:
+            # Tail: return the last 'offset' lines (negative indexing in
+            # Python)
+            return lines[offset:]
+
+    return lines
+
+
+def read(path: str, binary: bool = False, offset: Optional[int] = None,
+         start_line: Optional[int] = None, limit: Optional[int] = None
+         ) -> Union[str, bytes]:
+    """
+    Read a file located at the given path. Supports reading a specific number
+    of lines from the start (head/tail via offset) or a specific line range
+    (via start_line and limit).
+
+    :param str path: Path where the file is located.
+    :param bool binary: If true will read the file with the binary flag.
+    :param Optional[int] offset: Number of lines to return (for head/tail).
+    :param Optional[int] start_line: 1-based index of the line to start reading
+    from.
+    :param Optional[int] limit: The maximum number of lines to read starting
+    from start_line.
+    :return str|bytes: File content (string or bytes).
+    """
     abs_path = path
     if not os.path.isabs(abs_path):
         abs_path = os.path.join(os.getcwd(), abs_path)
-    with open(abs_path, mode) as f:
-        data = f.read()
-    return data
+
+    mode = "r"
+    joiner = ""
+    if binary:
+        mode = "rb"
+        joiner = b""
+
+    lines = _read_and_slice(path, mode, offset, start_line, limit)
+    return joiner.join(lines)
 
 
 def touch(path):

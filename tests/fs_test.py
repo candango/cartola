@@ -100,11 +100,17 @@ class FsBasicIOOperationsTestCase(unittest.TestCase):
         """
         self.file_to_read = "cartola_sandbox.txt"
         self.file_to_read_path = tests.get_sandbox_path(self.file_to_read)
+        self.file_to_read_offset = "cartola_file_to_read_offset.txt"
+        self.file_to_read_path_offset = tests.get_sandbox_path(
+                self.file_to_read_offset)
+        self.file_to_append = "cartola_file_append_test.txt"
         self.file_to_write = "cartola_file_write_test.txt"
-        self.file_to_write_path = tests.get_sandbox_path(self.file_to_write)
+        self.file_to_write_path = tests.get_sandbox_path(self.file_to_append)
+        self.file_to_append_path = tests.get_sandbox_path(self.file_to_write)
         fs.remove_existing(self.file_to_write_path)
 
     def tearDown(self):
+        fs.remove_existing(self.file_to_append_path)
         fs.remove_existing(self.file_to_write_path)
 
     def test_string_fs_read(self):
@@ -112,6 +118,38 @@ class FsBasicIOOperationsTestCase(unittest.TestCase):
         expected = "Do not remove this file.\n"
         value = fs.read(self.file_to_read_path)
         self.assertIsInstance(value, str)
+        self.assertEqual(expected, value)
+
+    def test_bidnary_fs_read_offset(self):
+        """ Read a file returning byte as result. """
+        expected = b"line 1\n"
+        value = fs.read(self.file_to_read_path_offset, binary=True, offset=1)
+        self.assertEqual(expected, value)
+        expected = b"line 3\nline 4\nline 5\n"
+        value = fs.read(self.file_to_read_path_offset, binary=True,
+                        start_line=3, limit=3)
+        self.assertEqual(expected, value)
+        expected = b"line 10\nline 11\n"
+        value = fs.read(self.file_to_read_path_offset, binary=True,
+                        start_line=10, limit=2)
+        self.assertEqual(expected, value)
+        expected = b"line 20\n"
+        value = fs.read(self.file_to_read_path_offset, binary=True, offset=-1)
+        self.assertEqual(expected, value)
+
+    def test_string_fs_read_offset(self):
+        """ Read a file returning string as result. """
+        expected = "line 1\n"
+        value = fs.read(self.file_to_read_path_offset, offset=1)
+        self.assertEqual(expected, value)
+        expected = "line 3\nline 4\nline 5\n"
+        value = fs.read(self.file_to_read_path_offset, start_line=3, limit=3)
+        self.assertEqual(expected, value)
+        expected = "line 10\nline 11\n"
+        value = fs.read(self.file_to_read_path_offset, start_line=10, limit=2)
+        self.assertEqual(expected, value)
+        expected = "line 20\n"
+        value = fs.read(self.file_to_read_path_offset, offset=-1)
         self.assertEqual(expected, value)
 
     def test_binary_fs_read(self):
